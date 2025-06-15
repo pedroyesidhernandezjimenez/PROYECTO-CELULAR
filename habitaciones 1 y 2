@@ -1,0 +1,43 @@
+void ATuActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+    static bool bHasExecuted = false;
+    if (bHasExecuted) return;
+    bHasExecuted = true;
+
+    // Parte 1: Spawnear el actor hijo
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    FVector SpawnLocation = FVector(-2360.f, -260.f, 350.f);
+    FRotator SpawnRotation = FRotator::ZeroRotator;
+    FVector SpawnScale = FVector(5.f, 0.25f, 5.f);
+
+    FTransform SpawnTransform(SpawnRotation, SpawnLocation, SpawnScale);
+    APareAnimalChild* SpawnedActor = GetWorld()->SpawnActor<APareAnimalChild>(PareAnimalChildClass, SpawnTransform, SpawnParams);
+
+    // Parte 2: Ajustar MediaPlayer y reproducir sonido
+    if (MediaPlayer && MediaSource)
+    {
+        MediaPlayer->OpenSource(MediaSource);
+
+        UGameplayStatics::PlaySoundAtLocation(
+            this,
+            SoundToPlay,
+            FVector(0.f, 0.f, 0.f), // Puedes ajustarlo si necesitas otra ubicación
+            1.0f, // VolumeMultiplier
+            1.0f  // PitchMultiplier
+        );
+    }
+
+    // Parte 3: Esperar 25 segundos y luego destruir MediaPlayer
+    FTimerHandle TimerHandle;
+    GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
+    {
+        if (IsValid(MediaPlayerActor))
+        {
+            MediaPlayerActor->Destroy();
+        }
+
+    }, 25.0f, false);
+}
+
