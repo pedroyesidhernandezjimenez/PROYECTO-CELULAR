@@ -1,0 +1,41 @@
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/TriggerBox.h"
+#include "Materials/MaterialInterface.h"
+#include "MiActorGenerador.generated.h"
+
+UCLASS()
+class TUJUEGO_API AMiActorGenerador : public AActor
+{
+    GENERATED_BODY()
+
+public:
+    virtual void BeginPlay() override;
+
+    UFUNCTION()
+    void OnTriggerEnter(AActor* OverlappedActor, AActor* OtherActor);
+
+protected:
+    UPROPERTY(EditAnywhere)
+    ATriggerBox* TriggerBox1;
+
+    UPROPERTY(EditAnywhere)
+    ATriggerBox* TriggerBox2;
+
+    UPROPERTY(EditAnywhere)
+    ATriggerBox* TriggerBox3;
+
+    UPROPERTY(EditAnywhere)
+    UStaticMeshComponent* Flecha1;
+
+    UPROPERTY(EditAnywhere)
+    UStaticMeshComponent* Flecha2;
+
+    UPROPERTY(EditAnywhere)
+    UStaticMeshComponent* Flecha3;
+
+    UPROPERTY(EditAnywhere)
+    UMaterialInterface* MaterialRojo;
+};
+
