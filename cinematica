@@ -1,0 +1,37 @@
+void ATuTriggerActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+    static bool bHasTriggered = false;
+    if (bHasTriggered) return;
+    bHasTriggered = true;
+
+    // Crear y reproducir secuencia (cinemática)
+    if (LevelSequence && LevelSequenceActorClass)
+    {
+        FMovieSceneSequencePlaybackSettings Settings;
+        ALevelSequenceActor* OutActor;
+        ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+            GetWorld(), LevelSequence, Settings, OutActor
+        );
+
+        if (SequencePlayer)
+        {
+            SequencePlayer->Play();
+        }
+    }
+
+    // Reproducir sonido de introducción
+    UGameplayStatics::PlaySoundAtLocation(this, IntroSound, FVector(0.f, 0.f, 0.f));
+
+    // Esperar 8 segundos, luego otros 10, luego reproducir segundo sonido
+    FTimerHandle FirstWaitHandle;
+    GetWorld()->GetTimerManager().SetTimer(FirstWaitHandle, [this]()
+    {
+        FTimerHandle SecondWaitHandle;
+        GetWorld()->GetTimerManager().SetTimer(SecondWaitHandle, [this]()
+        {
+            // Reproducir segundo sonido
+            UGameplayStatics::PlaySoundAtLocation(this, HistoriaSound, FVector(0.f, 0.f, 0.f));
+        }, 10.0f, false);
+
+    }, 8.0f, false);
+}
