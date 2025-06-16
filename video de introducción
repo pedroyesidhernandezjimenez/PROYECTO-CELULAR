@@ -1,0 +1,20 @@
+void AVideosIntroduccion::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // Asegurar que los MediaPlayers existen
+    if (MediaPlayerIntro && MediaSourceGuestInstruccion)
+    {
+        MediaPlayerIntro->OpenSource(MediaSourceGuestInstruccion);
+    }
+
+    if (MediaPlayerMision && MediaSourcePresentacionInicio)
+    {
+        MediaPlayerMision->OpenSource(MediaSourcePresentacionInicio);
+    }
+}
+
+
+
+
+
