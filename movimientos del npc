@@ -1,0 +1,26 @@
+#include "PhysicalAnimationComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
+void AMiActor::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // Suponiendo que estos componentes están ya configurados en el Blueprint o constructor
+    PhysicalAnimation->SetSkeletalMeshComponent(SkeletalMesh);
+
+    FPhysicalAnimationData PhysicalAnimationData;
+    PhysicalAnimationData.bIsLocalSimulation = false;
+    PhysicalAnimationData.OrientationStrength = 1000.f;
+    PhysicalAnimationData.AngularVelocityStrength = 10.f;
+    PhysicalAnimationData.PositionStrength = 1000.f;
+    PhysicalAnimationData.VelocityStrength = 100.f;
+    PhysicalAnimationData.MaxLinearForce = 0.f;
+    PhysicalAnimationData.MaxAngularForce = 0.f;
+
+    PhysicalAnimation->ApplyPhysicalAnimationSettingsBelow(
+        TEXT("pelvis"),        // Nombre del hueso
+        PhysicalAnimationData, // Configuración física
+        false                  // No incluir el hueso en sí, solo los hijos
+    );
+}
+
